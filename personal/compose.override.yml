@@ -1,0 +1,15 @@
+# Layered on top of compose.yml (a copy of compose.example.yml) so the
+# upstream file stays untouched and syncing the fork never conflicts.
+# The example file only forwards OpenAI settings, so Anthropic ones are added here.
+x-ai-env: &ai_env
+  LLM_PROVIDER: ${LLM_PROVIDER:-}
+  ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+  ANTHROPIC_MODEL: ${ANTHROPIC_MODEL:-}
+
+services:
+  web:
+    environment:
+      <<: *ai_env
+  worker:
+    environment:
+      <<: *ai_env

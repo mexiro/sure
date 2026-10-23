@@ -1,0 +1,79 @@
+# Personal setup: N26, Deutsche Bank, TF Bank
+
+How I run this fork of Sure on my MacBook. Everything runs locally in Docker,
+and bank data stays in the Postgres volume on the Mac.
+
+## 1. Run it
+
+Install [Docker Desktop for Mac](https://www.docker.com/products/docker-desktop/), then:
+
+```bash
+git clone https://github.com/mexiro/sure.git ~/sure
+cd ~/sure
+cp compose.example.yml compose.yml      # git ignores compose.yml
+cp personal/.env.example .env           # git ignores .env
+openssl rand -hex 64                    # paste into SECRET_KEY_BASE in .env
+```
+
+Fill in `.env` (secret key, a database password, Anthropic API key), then start:
+
+```bash
+docker compose -f compose.yml -f personal/compose.override.yml up -d
+```
+
+Open http://localhost:3000 and create your account. The first user is the admin.
+
+Stop with the same command, replacing `up -d` with `down`. Data is kept.
+
+## 2. Connect N26 and Deutsche Bank (Enable Banking)
+
+1. Sign up at [enablebanking.com](https://enablebanking.com/) and create an
+   application. It gives you an **Application ID** and a **private key / certificate**.
+2. In Sure: **Settings → Bank sync → Enable Banking**. Sure shows the callback
+   URL to register in your Enable Banking app (`http://localhost:3000/enable_banking_items/callback`).
+3. Paste the Application ID and certificate, choose **Germany**, save.
+4. **Add Connection** → pick N26, log in on N26's page. Repeat for Deutsche Bank.
+
+PSD2 consent expires (usually after 90–180 days). When Sure shows
+"Session expired", click **Reconnect**.
+
+If Enable Banking won't accept a `localhost` callback, or a bank isn't listed,
+use CSV import instead (step 3).
+
+## 3. CSV import (fallback for any bank)
+
+- **N26:** app or web → Account → Downloads → CSV.
+- **Deutsche Bank:** online banking → Umsatzanzeige → Export → CSV.
+
+In Sure: **Imports → New import → Transactions (CSV)**, upload the file, then
+map the columns (date, amount, name). German exports use `;` as separator and
+`,` as decimal mark — set those in the import options.
+
+## 4. TF Bank credit card
+
+1. Create a **Credit Card** account in Sure for the TF Bank card.
+2. Download the monthly statement PDF from TF Bank online banking.
+3. **Imports → New import → PDF**, choose *credit card statement*. Claude reads
+   the PDF and extracts the transactions. Review them before publishing.
+
+This needs `ANTHROPIC_API_KEY` set. If TF Bank also offers a CSV export, the CSV
+import in step 3 works too.
+
+## 5. AI assistant
+
+With `LLM_PROVIDER=anthropic` and `ANTHROPIC_API_KEY` set, the chat sidebar can
+answer questions about your accounts and spending. The same key powers
+auto-categorization and the PDF import. Set a monthly spend limit in the
+Anthropic console. Details: [docs/hosting/ai.md](../docs/hosting/ai.md).
+
+## Keeping the fork updated
+
+On GitHub, click **Sync fork** on `mexiro/sure`, then on the Mac:
+
+```bash
+git pull
+docker compose -f compose.yml -f personal/compose.override.yml pull
+docker compose -f compose.yml -f personal/compose.override.yml up -d
+```
+
+Everything personal lives in `personal/`, so syncing never conflicts.
