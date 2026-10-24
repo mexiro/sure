@@ -10,6 +10,9 @@ services:
   web:
     environment:
       <<: *ai_env
+    # Reachable only from this Mac, not from other devices on the same Wi-Fi.
+    ports: !override
+      - "127.0.0.1:${PORT:-3000}:3000"
   worker:
     environment:
       <<: *ai_env
@@ -18,7 +21,7 @@ services:
     image: caddy:2
     restart: unless-stopped
     ports:
-      - "443:443"
+      - "127.0.0.1:443:443"
     volumes:
       - ./personal/Caddyfile:/etc/caddy/Caddyfile:ro
       - caddy-data:/data
