@@ -7,7 +7,7 @@ x-ai-env: &ai_env
   ANTHROPIC_MODEL: ${ANTHROPIC_MODEL:-}
   # Passkeys / Touch ID sign-in, bound to the https://localhost address
   WEBAUTHN_RP_ID: localhost
-  WEBAUTHN_ALLOWED_ORIGINS: https://localhost
+  WEBAUTHN_ALLOWED_ORIGINS: https://localhost,http://localhost:3000
 
 services:
   web:
