@@ -73,6 +73,24 @@ answer questions about your accounts and spending. The same key powers
 auto-categorization and the PDF import. Set a monthly spend limit in the
 Anthropic console. Details: [docs/hosting/ai.md](../docs/hosting/ai.md).
 
+## Backups
+
+Backups go to `~/sure-backups` (set by `BACKUP_DIR` in `.env`), outside the
+repo so they can never be pushed to GitHub. Each one holds the full database,
+uploaded files and `.env` with your keys — keep it private.
+
+```bash
+cd ~/sure
+alias sure-compose='docker compose -f compose.yml -f personal/compose.override.yml'
+sure-compose run --rm backup create          # back up now
+sure-compose --profile backup up -d backup   # daily at 02:00 UTC, keeps 7 days
+sure-compose run --rm backup list            # list backups
+```
+
+Copy `~/sure-backups` to an external drive now and then; a backup on the same
+laptop doesn't survive losing the laptop. Restoring: see
+[docs/hosting/docker.md](../docs/hosting/docker.md#backups-upgrades-and-rollbacks).
+
 ## Keeping the fork updated
 
 On GitHub, click **Sync fork** on `mexiro/sure`, then on the Mac:
