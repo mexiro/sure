@@ -1,0 +1,6 @@
+# Enable Banking only accepts https redirect URLs, so Sure is served at
+# https://localhost with a certificate from Caddy's own local CA.
+https://localhost {
+	tls internal
+	reverse_proxy web:3000
+}

@@ -13,3 +13,19 @@ services:
   worker:
     environment:
       <<: *ai_env
+
+  https:
+    image: caddy:2
+    restart: unless-stopped
+    ports:
+      - "443:443"
+    volumes:
+      - ./personal/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+    depends_on:
+      - web
+    networks:
+      - sure_net
+
+volumes:
+  caddy-data:

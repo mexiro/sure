@@ -21,7 +21,11 @@ Fill in `.env` (secret key, a database password, Anthropic API key), then start:
 docker compose -f compose.yml -f personal/compose.override.yml up -d
 ```
 
-Open http://localhost:3000 and create your account. The first user is the admin.
+Open https://localhost and create your account. The first user is the admin.
+The browser warns about the certificate the first time (it comes from a local
+Caddy CA, not a public one): choose *Show details → visit this website* in
+Safari or *Advanced → Proceed* in Chrome. http://localhost:3000 also works,
+but bank connections need the https address.
 
 Stop with the same command, replacing `up -d` with `down`. Data is kept.
 
@@ -29,16 +33,19 @@ Stop with the same command, replacing `up -d` with `down`. Data is kept.
 
 1. Sign up at [enablebanking.com](https://enablebanking.com/) and create an
    application. It gives you an **Application ID** and a **private key / certificate**.
-2. In Sure: **Settings → Bank sync → Enable Banking**. Sure shows the callback
-   URL to register in your Enable Banking app (`http://localhost:3000/enable_banking_items/callback`).
-3. Paste the Application ID and certificate, choose **Germany**, save.
+   Choose **Production** and *Generate in the browser*; keep the downloaded
+   `.pem` file private.
+2. Register the redirect URL `https://localhost/enable_banking_items/callback`
+   (Enable Banking rejects `http://`). Open Sure at https://localhost, go to
+   **Settings → Bank sync → Enable Banking**; the callback URL it shows must match.
+3. Paste the Application ID and the full contents of the `.pem` file
+   (`open -e ~/Downloads/*.pem`), choose **Germany**, save.
 4. **Add Connection** → pick N26, log in on N26's page. Repeat for Deutsche Bank.
 
 PSD2 consent expires (usually after 90–180 days). When Sure shows
 "Session expired", click **Reconnect**.
 
-If Enable Banking won't accept a `localhost` callback, or a bank isn't listed,
-use CSV import instead (step 3).
+If a bank isn't listed, use CSV import instead (step 3).
 
 ## 3. CSV import (fallback for any bank)
 
