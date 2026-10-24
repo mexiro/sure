@@ -73,6 +73,16 @@ answer questions about your accounts and spending. The same key powers
 auto-categorization and the PDF import. Set a monthly spend limit in the
 Anthropic console. Details: [docs/hosting/ai.md](../docs/hosting/ai.md).
 
+## Touch ID sign-in
+
+In Sure (at https://localhost): **Settings → Security**. First **Enable 2FA**
+with an authenticator app (Google Authenticator, 1Password, …) and save the
+backup codes; Sure requires it before adding a passkey. Then **Add passkey or
+security key** and confirm with Touch ID. Afterwards you can sign in with your
+fingerprint. Log
+out when you're done (or use a strong password) so anyone using the Mac while
+it's unlocked doesn't land straight in your finances.
+
 ## Backups
 
 Backups go to `~/sure-backups` (set by `BACKUP_DIR` in `.env`), outside the

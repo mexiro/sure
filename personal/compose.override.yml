@@ -5,6 +5,9 @@ x-ai-env: &ai_env
   LLM_PROVIDER: ${LLM_PROVIDER:-}
   ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
   ANTHROPIC_MODEL: ${ANTHROPIC_MODEL:-}
+  # Passkeys / Touch ID sign-in, bound to the https://localhost address
+  WEBAUTHN_RP_ID: localhost
+  WEBAUTHN_ALLOWED_ORIGINS: https://localhost
 
 services:
   web:
