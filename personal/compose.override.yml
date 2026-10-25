@@ -5,6 +5,9 @@ x-ai-env: &ai_env
   LLM_PROVIDER: ${LLM_PROVIDER:-}
   ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
   ANTHROPIC_MODEL: ${ANTHROPIC_MODEL:-}
+  # On by default for self-hosted installs: a daily usage ping and cash-flow
+  # chart feedback go to Sure's PostHog project. Keep everything local.
+  POSTHOG_FEEDBACK_ENABLED: "false"
   # Passkeys / Touch ID sign-in, bound to the https://localhost address
   WEBAUTHN_RP_ID: localhost
   WEBAUTHN_ALLOWED_ORIGINS: https://localhost,http://localhost:3000
